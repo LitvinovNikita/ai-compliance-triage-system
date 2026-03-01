@@ -124,7 +124,7 @@ accounts (1) ──────< transactions (many)
     └── transactions (1) ───< compliance_reviews (many)
 ```
 
-**Screenshot:** save a capture of your Supabase Table Editor as `docs/images/supabase-tables.png` (tables: `accounts`, `transactions`, `ai_risk_analysis`, `compliance_reviews`).
+
 
 ![Supabase table structure](docs/images/supabase-tables.png)
 
@@ -202,9 +202,9 @@ Return result to client
 
 ## 8. More screenshots
 
-<!-- Optional: add docs/images/transactions-list.png and transaction-review.png -->
-<!-- ![Transactions list](docs/images/transactions-list.png) -->
-<!-- ![Transaction review](docs/images/transaction-review.png) -->
+
+![Transactions list](docs/images/transactions-list.png) 
+![Transaction review](docs/images/transaction-review.png) 
 
 ---
 
@@ -234,20 +234,4 @@ Return result to client
 
 ---
 
-## Adding screenshots
-
-1. **Create the folder** (already done): `docs/images/`
-2. **Save your screenshots** there, e.g.:
-   - `docs/images/app-overview.png` — dashboard
-   - `docs/images/supabase-tables.png` — Supabase Table Editor
-   - `docs/images/transactions-list.png` — transactions list
-   - `docs/images/transaction-review.png` — transaction review page
-3. **Reference in README** with Markdown:
-   ```markdown
-   ![Description of the image](docs/images/your-filename.png)
-   ```
-   The path is relative to the project root. GitHub (and most Git hosts) will show the image in the README. If a file is missing, the image will appear broken until you add it.
-
----
-
-*AI triages; humans decide.*
+*Made by Nikita Litvinov*

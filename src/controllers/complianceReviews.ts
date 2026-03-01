@@ -8,8 +8,8 @@ export type ComplianceReviewInput = {
 
 /**
  * Record a human’s final decision on a transaction. This is the only place we
- * write “who decided what” — the AI never writes here. Used from the transaction
- * review panel when the officer clicks Save.
+ * write “who decided what” AI never writes here. Used from the transaction
+ * review panel when the humanr clicks Save.
  */
 export async function createComplianceReview(input: ComplianceReviewInput) {
   const { data, error } = await supabase

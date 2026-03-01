@@ -3,7 +3,7 @@
  * with realistic data, then triggers AI + rule analysis automatically.
  *
  * Run: npx tsx scripts/simulateLiveTransactions.ts
- * Requires: backend running on http://localhost:5000, .env with GEMINI_API_KEY and Supabase.
+ * Requires: backend running on http://localhost:5000 (or whatever localhost you use), .env with GEMINI_API_KEY and Supabase.
  */
 
 import "dotenv/config";

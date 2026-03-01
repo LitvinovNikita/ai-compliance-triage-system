@@ -4,7 +4,7 @@ import { getStats } from "../controllers/stats";
 
 const router = Router();
 
-// Stats are under /accounts so they’re on the same mount as other working routes (avoids 404s in some setups).
+// Stats are under /accounts so they’re on the same mount as other working routes .
 router.get("/stats", async (_req, res) => {
   try {
     const stats = await getStats();

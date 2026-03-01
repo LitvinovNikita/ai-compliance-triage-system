@@ -6,7 +6,7 @@ export const getTransactionDetails = async (req: Request, res: Response) => {
 
   try {
 
-    // 1️⃣ Get transaction
+    // Get transaction
     const { data: transaction, error: txError } = await supabase
       .from("transactions")
       .select("*")
@@ -15,14 +15,14 @@ export const getTransactionDetails = async (req: Request, res: Response) => {
 
     if (txError) throw txError;
 
-    // 2️⃣ Get AI analysis
+    // Get AI analysis
     const { data: aiAnalysis } = await supabase
       .from("ai_risk_analysis")
       .select("*")
       .eq("transaction_id", id)
       .single();
 
-    // 3️⃣ Get account history
+    // Get account history
     const { data: history } = await supabase
       .from("transactions")
       .select("*")

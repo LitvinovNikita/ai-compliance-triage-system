@@ -15,7 +15,7 @@ app.use(express.json());
 /*
  * Transaction create is registered here (instead of only on the router) so the
  * simulator script never hits a 404 — some setups were missing the route when
- * it lived only under the transactions router.
+ * it lived only under the transactions router (as far as I remember).
  */
 app.post("/api/transactions/create", async (req, res) => {
   const { account_id, amount, currency, merchant, location, device } = req.body ?? {};

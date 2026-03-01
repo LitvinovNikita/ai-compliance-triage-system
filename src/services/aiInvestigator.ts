@@ -26,7 +26,7 @@ function extractJson(text: string): string {
  * Send the transaction + account history to Gemini and get back a structured
  * risk assessment. We ask for JSON and a specific schema so we can store it
  * and show it in the UI. If the call or parse fails, we return a safe fallback
- * so the pipeline doesn’t break — the transaction still gets a “needs review” style result.
+ * so the pipeline doesn’t break —> the transaction still gets a “needs review” style result.
  */
 export async function investigateTransaction(
   transaction: Record<string, unknown>,

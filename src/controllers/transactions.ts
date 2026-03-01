@@ -1,4 +1,5 @@
 import { supabase } from "../db/supabaseClient";
+import { runRuleEngine } from "../services/ruleEngine";
 
 /**
  * All transactions with joined accounts, AI risk analysis, and compliance reviews.
@@ -70,6 +71,20 @@ export async function getTransactionById(id: string) {
 
   if (error) {
     throw error;
+  }
+
+  // If analysis exists but rule_score wasn't stored (e.g. older row), compute it on the fly so the UI can show it.
+  const analysis = data?.ai_risk_analysis as Array<{ rule_score?: number | null; rule_flags?: string[] | null }> | undefined;
+  if (data && analysis?.length && (analysis[0].rule_score == null || analysis[0].rule_flags == null)) {
+    const { data: history } = await supabase
+      .from("transactions")
+      .select("*")
+      .eq("account_id", data.account_id)
+      .order("timestamp", { ascending: false })
+      .limit(20);
+    const ruleResult = runRuleEngine(data, history ?? []);
+    analysis[0].rule_score = ruleResult.rule_score;
+    analysis[0].rule_flags = ruleResult.rule_flags;
   }
 
   return data;

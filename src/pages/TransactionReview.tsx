@@ -1,6 +1,6 @@
 /**
  * Transaction detail + human decision. Shows the transaction, account, AI report (and rule score / formula),
- * recent account activity, and the form to record the officer’s decision (approve, decline, on hold, etc.).
+ * recent account activity, and the form to record the humans decision (approve, decline, on hold, etc.).
  * Supabase returns ai_risk_analysis as an array for the join, so we use [0] when present.
  */
 import { useEffect, useState } from "react";
@@ -361,7 +361,7 @@ export default function TransactionReview() {
                     Previous Compliance Reviews
                   </h4>
                   <ul className="mt-2 space-y-2 text-xs text-slate-700">
-                    {data.compliance_reviews.map((r) => (
+                    {(data.compliance_reviews ?? []).map((r) => (
                       <li key={r.id} className="rounded-md bg-slate-50 p-2">
                         <div className="flex items-center justify-between">
                           <span className="font-medium">{r.human_decision}</span>

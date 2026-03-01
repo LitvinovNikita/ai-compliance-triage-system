@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-/** App shell nav: Overview, Transactions, Compliance Reviews. Active route gets a distinct style. */
+/** App  nav bar: Overview, Transactions, Compliance Reviews.*/
 export default function Sidebar() {
   const linkClass =
     "block px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-800 hover:text-white";

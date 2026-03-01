@@ -1,73 +1,254 @@
-# React + TypeScript + Vite
+# AI Risk & Compliance Triage System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A fintech-style prototype where **AI triages transactions** and **humans make the final regulatory decision**. The system combines deterministic rules and an AI (Gemini) to score risk, then escalates or auto-freezes only when needed.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Prerequisites
 
-## React Compiler
+- **Node.js** (v18+)
+- **Supabase** account (for PostgreSQL + API)
+- **Google AI (Gemini)** API key
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+---
 
-## Expanding the ESLint configuration
+## 1. Clone and install
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone <your-repo-url>
+cd ai-compliance-triage-system
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 2. Environment variables
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Create a `.env` file in the project root:
+
+```env
+# Supabase (required for DB)
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+
+# Gemini (required for AI triage)
+GEMINI_API_KEY=your-gemini-api-key
+
+# Optional: backend port (default 5000)
+# PORT=5000
 ```
+
+Get **Supabase** values from: Project → Settings → API.  
+Get **Gemini** key from: [Google AI Studio](https://aistudio.google.com/apikey).
+
+---
+
+## 3. Database setup (Supabase)
+
+1. In the Supabase dashboard, open the **SQL Editor**.
+2. Run the contents of `db/schema.sql` to create tables and indexes.
+3. (Optional) Run `db/migrations/001_hybrid_risk_engine.sql` if your schema was created before the hybrid engine (adds `rule_score`, `combined_score`, etc.).
+4. (Optional) Run `db/seed.sql` to insert demo accounts and a few sample transactions.
+
+<!-- Leave space for a screenshot of Supabase SQL Editor or Table Editor -->
+
+<br/>
+
+<!-- [IMAGE: Screenshot of Supabase dashboard – SQL Editor or Tables view] -->
+
+<br/>
+<br/>
+
+---
+
+## 4. How to run
+
+You’ll typically run **backend** and **frontend**; the **simulator** is optional (for generating live-like transactions).
+
+### Backend (API)
+
+```bash
+npm run server
+```
+
+- Runs on **http://localhost:5000** (or `PORT` from `.env`).
+- Serves all API routes; must be running for the frontend and simulator.
+
+### Frontend (React + Vite)
+
+```bash
+npm run dev
+```
+
+- Opens the app (e.g. **http://localhost:5173**).
+- Uses the backend at `http://localhost:5000/api` (see `src/api/client.ts` if you change the port).
+
+### Simulator (optional)
+
+```bash
+npm run simulate
+```
+
+- **Requires the backend to be running** on port 5000.
+- Every 5–30 seconds: creates one transaction for a random account, then runs **AI + rule analysis** (same as “Run AI triage” in the UI).
+- Use this to see new transactions, risk scores, and auto-freeze in action.
+
+**Quick start (two terminals):**
+
+```text
+Terminal 1:  npm run server
+Terminal 2:  npm run dev
+```
+
+Then open the app in the browser. Add `npm run simulate` in a third terminal to generate traffic.
+
+---
+
+## 5. App overview (screenshot placeholder)
+
+<!-- [IMAGE: Screenshot of the app – e.g. Overview/Dashboard with stats and account list] -->
+
+<br/>
+
+<br/>
+<br/>
+
+---
+
+## 6. Supabase table structure
+
+The app uses four main tables. Relationships:
+
+- **accounts** — one row per customer/account (`account_status`: ACTIVE, FROZEN, REVIEW).
+- **transactions** — each row references one `account_id`; stores amount, merchant, location, device, timestamp.
+- **ai_risk_analysis** — one row per transaction after “Run AI triage” (or simulator analyze): rule score, AI score, combined score, flags, decision (ALLOW / MONITOR / ESCALATE_TO_HUMAN / FREEZE_ACCOUNT).
+- **compliance_reviews** — one row per human decision on a transaction (approve, decline, freeze, etc.).
+
+**Relationship summary:**
+
+```text
+accounts (1) ──────< transactions (many)
+    │
+    └── transactions (1) ─── ai_risk_analysis (0 or 1)
+    │
+    └── transactions (1) ───< compliance_reviews (many)
+```
+
+**Add a screenshot of your Supabase Table Editor below** (tables: `accounts`, `transactions`, `ai_risk_analysis`, `compliance_reviews`) so reviewers can see the structure at a glance.
+
+<!-- [IMAGE: Supabase Table Editor showing the four tables and their columns] -->
+
+<br/>
+
+<br/>
+<br/>
+
+---
+
+## 7. System workflow (text + arrows)
+
+### High-level app flow
+
+```text
+User opens app
+    │
+    ▼
+Overview (Dashboard) ──► stats + account list
+    │
+    ├──► Click account ──► Account details (transactions for that account)
+    │
+    ├──► Transactions ──► List of all transactions (risk badges, “Run AI triage”)
+    │         │
+    │         └──► Click row ──► Transaction review (AI report + human decision form)
+    │
+    └──► Compliance Reviews ──► Log of all human decisions
+```
+
+### API request flow (simplified)
+
+```text
+Frontend (React)
+    │
+    ├── GET  /api/accounts          ──► list accounts (+ last_activity)
+    ├── GET  /api/accounts/stats    ──► triage/review/frozen counts
+    ├── GET  /api/accounts/:id/transactions  ──► transactions for one account
+    │
+    ├── GET  /api/transactions      ──► list transactions (with account + ai_risk_analysis)
+    ├── GET  /api/transactions/:id  ──► one transaction (detail + analysis + reviews)
+    ├── POST /api/transactions/create  ──► create transaction (simulator / ingestion)
+    ├── POST /api/transactions/analyze   ──► run investigation (rules + AI, persist, maybe freeze)
+    └── POST /api/transactions/:id/review ──► save human decision (compliance_reviews)
+```
+
+**Legacy (same behavior as analyze):**
+
+```text
+POST /api/investigate/:transactionId  ──► same as POST /api/transactions/analyze
+```
+
+### What happens when you “Run AI triage” (or simulator calls analyze)
+
+```text
+POST /api/transactions/analyze { transactionId }
+    │
+    ▼
+Load transaction + last 20 transactions for same account
+    │
+    ├──► Rule engine (deterministic) ──► rule_score (0–100) + rule_flags
+    │
+    ├──► AI (Gemini) ──► risk_score, flags, explanation, recommended_action
+    │
+    ▼
+Combine:  combined_score = 40% × rule_score + 60% × AI risk_score
+    │
+    ▼
+Decision engine ──► ALLOW | MONITOR | ESCALATE_TO_HUMAN | FREEZE_ACCOUNT
+    │
+    ▼
+Upsert ai_risk_analysis (rule_score, combined_score, decision_engine_action, …)
+    │
+    └──► If FREEZE_ACCOUNT ──► set account.account_status = 'FROZEN'
+    │
+    ▼
+Return result to client
+```
+
+---
+
+## 8. Placeholder for extra screenshots
+
+<!-- [IMAGE: e.g. Transaction list with risk badges] -->
+
+<br/>
+
+<!-- [IMAGE: e.g. Transaction review page – AI report + human decision] -->
+
+<br/>
+
+---
+
+## Tech stack
+
+| Layer      | Tech |
+|-----------|------|
+| Frontend  | React, TypeScript, Vite, Tailwind CSS, React Router |
+| Backend   | Node.js, Express, TypeScript |
+| Database  | PostgreSQL (Supabase) |
+| AI        | Google Gemini (via `@google/genai`) |
+
+---
+
+## Scripts reference
+
+| Command           | Description |
+|-------------------|-------------|
+| `npm run dev`     | Start Vite dev server (frontend) |
+| `npm run server`  | Start Express API (backend) |
+| `npm run simulate`| Create + analyze transactions periodically (backend must be running) |
+| `npm run build`   | TypeScript build + Vite production build |
+| `npm run preview` | Preview production build |
+| `npm run lint`    | Run ESLint |
+
+---
+
+*AI triages; humans decide.*

@@ -9,7 +9,7 @@ router.post("/:transactionId", async (req, res) => {
   try {
     const result = await runInvestigation(transactionId);
     res.json(result);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: "AI investigation failed" });
   }
 });

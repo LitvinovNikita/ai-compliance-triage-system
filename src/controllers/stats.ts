@@ -21,7 +21,7 @@ export async function getStats(): Promise<Stats> {
     supabase
       .from("ai_risk_analysis")
       .select("id", { count: "exact", head: true })
-      .or("risk_level.eq.HIGH,decision_engine_action.eq.FREEZE_ACCOUNT,decision_engine_action.eq.ESCALATE_TO_HUMAN"),
+      .or("risk_level.eq.HIGH, decision_engine_action.eq.FREEZE_ACCOUNT, decision_engine_action.eq.ESCALATE_TO_HUMAN"),
     supabase.from("accounts").select("id", { count: "exact", head: true }).eq("account_status", "FROZEN")
   ]);
 

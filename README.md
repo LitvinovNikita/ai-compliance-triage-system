@@ -50,14 +50,8 @@ Get **Gemini** key from: [Google AI Studio](https://aistudio.google.com/apikey).
 3. (Optional) Run `db/migrations/001_hybrid_risk_engine.sql` if your schema was created before the hybrid engine (adds `rule_score`, `combined_score`, etc.).
 4. (Optional) Run `db/seed.sql` to insert demo accounts and a few sample transactions.
 
-<!-- Leave space for a screenshot of Supabase SQL Editor or Table Editor -->
-
-<br/>
-
-<!-- [IMAGE: Screenshot of Supabase dashboard – SQL Editor or Tables view] -->
-
-<br/>
-<br/>
+<!-- Add a screenshot: save it as docs/images/supabase-setup.png and it will show below -->
+<!-- ![Supabase setup](docs/images/supabase-setup.png) -->
 
 ---
 
@@ -104,14 +98,10 @@ Then open the app in the browser. Add `npm run simulate` in a third terminal to 
 
 ---
 
-## 5. App overview (screenshot placeholder)
+## 5. App overview
 
-<!-- [IMAGE: Screenshot of the app – e.g. Overview/Dashboard with stats and account list] -->
-
-<br/>
-
-<br/>
-<br/>
+<!-- Save your screenshot as docs/images/app-overview.png -->
+![App overview](docs/images/app-overview.png)
 
 ---
 
@@ -134,14 +124,9 @@ accounts (1) ──────< transactions (many)
     └── transactions (1) ───< compliance_reviews (many)
 ```
 
-**Add a screenshot of your Supabase Table Editor below** (tables: `accounts`, `transactions`, `ai_risk_analysis`, `compliance_reviews`) so reviewers can see the structure at a glance.
+**Screenshot:** save a capture of your Supabase Table Editor as `docs/images/supabase-tables.png` (tables: `accounts`, `transactions`, `ai_risk_analysis`, `compliance_reviews`).
 
-<!-- [IMAGE: Supabase Table Editor showing the four tables and their columns] -->
-
-<br/>
-
-<br/>
-<br/>
+![Supabase table structure](docs/images/supabase-tables.png)
 
 ---
 
@@ -215,15 +200,11 @@ Return result to client
 
 ---
 
-## 8. Placeholder for extra screenshots
+## 8. More screenshots
 
-<!-- [IMAGE: e.g. Transaction list with risk badges] -->
-
-<br/>
-
-<!-- [IMAGE: e.g. Transaction review page – AI report + human decision] -->
-
-<br/>
+<!-- Optional: add docs/images/transactions-list.png and transaction-review.png -->
+<!-- ![Transactions list](docs/images/transactions-list.png) -->
+<!-- ![Transaction review](docs/images/transaction-review.png) -->
 
 ---
 
@@ -248,6 +229,24 @@ Return result to client
 | `npm run build`   | TypeScript build + Vite production build |
 | `npm run preview` | Preview production build |
 | `npm run lint`    | Run ESLint |
+
+---
+
+---
+
+## Adding screenshots
+
+1. **Create the folder** (already done): `docs/images/`
+2. **Save your screenshots** there, e.g.:
+   - `docs/images/app-overview.png` — dashboard
+   - `docs/images/supabase-tables.png` — Supabase Table Editor
+   - `docs/images/transactions-list.png` — transactions list
+   - `docs/images/transaction-review.png` — transaction review page
+3. **Reference in README** with Markdown:
+   ```markdown
+   ![Description of the image](docs/images/your-filename.png)
+   ```
+   The path is relative to the project root. GitHub (and most Git hosts) will show the image in the README. If a file is missing, the image will appear broken until you add it.
 
 ---
 

@@ -116,6 +116,7 @@ The app uses four main tables. Relationships:
 
 **Relationship summary:**
 
+![Entity Relationship Diagram](docs/images/ERD-diagram.png)
 ```text
 accounts (1) ──────< transactions (many)
     │
